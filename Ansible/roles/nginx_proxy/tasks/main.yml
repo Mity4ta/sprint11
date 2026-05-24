@@ -1,0 +1,23 @@
+---
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Copy proxy config
+  template:
+    src: nginx_proxy.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify: restart nginx
+
+- name: Ensure Nginx is running
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+handlers:
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted
